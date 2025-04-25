@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif; 
+  background-color: #ffffff;
+  color: #000000;
+}
+
+button, select {
+  font-family: 'Poppins', sans-serif; 
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
