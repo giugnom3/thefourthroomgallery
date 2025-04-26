@@ -29,7 +29,7 @@ React (Vite Build)
 
 Three.js (3D Gallery Engine)
 
-Vanilla CSS for clean styling
+Vanilla CSS for easy styling
 
 Nipple.js (Joystick control for navigation)
 
