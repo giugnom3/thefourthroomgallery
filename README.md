@@ -26,22 +26,31 @@ Walk through immersive rooms, view artworks, and browse the full gallery library
 🧩 Technologies Used:
 
 React (Vite Build)
+
 Three.js (3D Gallery Engine)
+
 Vanilla CSS for clean styling
+
 Nipple.js (Joystick control for navigation)
 
 🎮 Features:
 
 🕹️ Navigate using the on-screen joystick.
+
 🖼️ Click artworks to open an info modal.
+
 📂 Dropdown filters rooms and photo grid library.
+
 🌗 Toggle Dark Mode / Light Mode.
+
 📋 Instructions modal for new visitors.
+
 🚪 Room shortcut buttons (jump to rooms without filtering photo grid).
 
 🔥 Quick Start Commands:
 
 npm install
+
 npm start
 
  📁 Folder Structure:
