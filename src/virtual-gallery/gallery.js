@@ -33,13 +33,13 @@ const wallArtworkByRoom = {
   ]
 };
 
-const roomPositions = {
-  all: new THREE.Vector3(0, 5, 70),
-  color: new THREE.Vector3(0, 5, 70),
-  bw: new THREE.Vector3(40, 5, 70),
-  sculpture: new THREE.Vector3(80, 5, 70),
-  death: new THREE.Vector3(120, 5, 70)
-};
+// const roomPositions = {
+//   all: new THREE.Vector3(0, 5, 70),
+//   color: new THREE.Vector3(0, 5, 70),
+//   bw: new THREE.Vector3(40, 5, 70),
+//   sculpture: new THREE.Vector3(80, 5, 70),
+//   death: new THREE.Vector3(120, 5, 70)
+// };
 
 const GalleryScene = () => {
   const mountRef = useRef(null);
@@ -85,10 +85,10 @@ const GalleryScene = () => {
     const minRoomWidth = 40;
 
     const themes = [
-      { name: 'Color', path: 'color', color: '#d0e4f0', position: [-30, 0, 0] },
+      { name: 'Color', path: 'color', color: '#d0e4f0', position: [0, 0, 0] },
       { name: 'Black & White', path: 'bw', color: '#f6f6f6', position: [0, 0, 0] },
-      { name: 'Sculpture', path: 'sculpture', color: '#e8dff4', position: [30, 0, 0] },
-      { name: 'Death', path: 'death', color: '#f2dede', position: [60, 0, 0] }
+      { name: 'Sculpture', path: 'sculpture', color: '#e8dff4', position: [0, 0, 0] },
+      { name: 'Death', path: 'death', color: '#f2dede', position: [0, 0, 0] }
     ];
 
     let runningX = 0; // Starting position for the first room
@@ -145,10 +145,12 @@ const GalleryScene = () => {
 
           for (let i = 0; i < themes.length - 1; i++) {
             const theme = themes[i];
+            console.log(themes.length);
+            console.log('looping through index: ', i);
             console.log('theme', theme);
             const nextTheme = themes[i + 1];
             console.log('nextTheme', nextTheme);
-
+            
             const dividerX = (theme.position[0] + theme.roomWidth / 2 + nextTheme.position[0] - nextTheme.roomWidth / 2) / 2;
             console.log('dividerX', dividerX);
             // const z = theme.position[2];
@@ -156,16 +158,17 @@ const GalleryScene = () => {
 
             // roomPositions[theme.path] = new THREE.Vector3(dividerX, 0, 0); // Update the room position for the current theme
           
-            const dividerWall = new THREE.Mesh(
-              new THREE.PlaneGeometry(50, 10),
-              wallMaterial
-            );
+            // const dividerWall = new THREE.Mesh(
+            //   new THREE.PlaneGeometry(50, 10),
+            //   wallMaterial
+            // );
 
             const rightWall = new THREE.Mesh(
               new THREE.PlaneGeometry(70, 10), 
               wallMaterial);
             rightWall.rotation.y = -Math.PI / 2;
-            rightWall.position.set(dividerX - 0.5, 5, z - 15); 
+            rightWall.position.set(dividerX - 0.5, 5, z - 15);
+            console.log('rightWall', rightWall);
             scene.add(rightWall);
     
             const leftWall = new THREE.Mesh(
@@ -179,11 +182,62 @@ const GalleryScene = () => {
             // dividerWall.name = 'dividerWall';
             // dividerWall.rotation.y = Math.PI / 2;
             // dividerWall.position.set(dividerX, 5, z - 15.01);
-            // scene.add(dividerWall);     
+            // scene.add(dividerWall);
+            const spotlight = new THREE.SpotLight(new THREE.Color(0xffffff), 5, 10, Math.PI / 4, 0.3);
+            
+            switch (i) {
+              default: {
+                console.log('default case', theme.position[0], z - 5);
+                break;
+              }
+              case 0: {
+                console.log('case 0', theme.position[0], z - 5);
+                spotlight.position.set(dividerX / 2, 5, z - 5);
+                // spotlight.position.set(x, 13, z - 15);
+                // spotlight.castShadow = true;
+                // spotlight.angle = Math.PI / 4;
+                spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+                scene.add(spotlight);
+                // spotlight.target.position.set(x, 5, z - 5);
+                // scene.add(spotlight.target);
+                break;
+              }
+              case 1: {
+                console.log('case 1', dividerX / 2, z - 5);
+                spotlight.position.set(dividerX / 2, 5, z - 5);
+                // spotlight.position.set(x, 13, z - 15);
+                // spotlight.castShadow = true;
+                // spotlight.angle = Math.PI / 4;
+                spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+                scene.add(spotlight);
+                // spotlight.target.position.set(x, 5, z - 5);
+                // scene.add(spotlight.target);
+                break;
+              }
+              case 2: {
+                console.log('case 2', dividerX / 2, z - 5);
+                spotlight.position.set(dividerX / 2, 5, z - 5);
+                // spotlight.position.set(x, 13, z - 15);
+                // spotlight.castShadow = true;
+                // spotlight.angle = Math.PI / 4;
+                spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+                scene.add(spotlight);
+                // spotlight.target.position.set(x, 5, z - 5);
+                // scene.add(spotlight.target);
+                const spotlight2 = new THREE.SpotLight(new THREE.Color(0xffffff), 5, 10, Math.PI / 4, 0.3);
+                spotlight2.position.set(72, 5, z - 5);
+                spotlight2.add(new THREE.SpotLightHelper(spotlight2)) 
+                scene.add(spotlight2);
+                break;
+              }
+            }
           }
         }
 
     themes.forEach(({ name, path, color, position, roomWidth }) => {
+      console.log(themes);
+      // console.log(path);
+      // console.log(position);
       const [x, z] = position;
       // const roomWidth = (path === 'sculpture' || path === 'death') ? 55 : 28;
       const wallOffset = roomWidth / 2;
@@ -224,11 +278,15 @@ const GalleryScene = () => {
       backWall.position.set(x, 5, z - 15);
       scene.add(backWall);
 
-      const spotlight = new THREE.SpotLight(0xffffff, 5, 50, Math.PI / 4, 0.3);
-      spotlight.position.set(x, 13, z - 15); 
-      spotlight.target.position.set(x, 5, z - 15);
-      scene.add(spotlight);
-      scene.add(spotlight.target);
+      // const spotlight = new THREE.SpotLight(new THREE.Color(0xffffff), 5, 10, Math.PI / 4, 0.3);
+      // spotlight.position.set(x, 5, z - 5);
+      // spotlight.position.set(x, 13, z - 15);
+      // spotlight.castShadow = true;
+      // spotlight.angle = Math.PI / 4;
+      // spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+      // scene.add(spotlight);
+      // spotlight.target.position.set(x, 5, z - 5);
+      // scene.add(spotlight.target);
 
       if (selectedRoom !== 'all') {
         const backWall = new THREE.Mesh(
@@ -587,8 +645,8 @@ setInfoBox(null);
               const room = selectedRoom;
               switch (room) {
                 case 'all':
-                  camera.current.position.set(0, 5, 70);  
-                  camera.current.lookAt(new THREE.Vector3(0, 5, 70));
+                  camera.current.position.set(0, 5, 100);  
+                  camera.current.lookAt(new THREE.Vector3(0, 5, 100));
                   break;
                 case 'color':
                   camera.current.position.set(0, 5, 70);  
