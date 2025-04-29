@@ -22,6 +22,7 @@ const artworksByRoom = {
 };
 
 const wallArtworkByRoom = {
+  // entrance: ['exhibit1.png', 'exhibit2.png'],
   color: ['color1.jpeg', 'color2.jpeg', 'color3.png', 'color4.jpeg', 'color5.jpeg'],
   bw: ['bw1_A.jpeg', 'bw1_B.jpeg', 'bw2.png'],
   death: ['death1.jpeg', 'death2.png', 'death3.jpeg', 'death4.jpeg', 'death5.jpeg', 'death6.jpeg', 'death7.jpeg'],
@@ -32,12 +33,13 @@ const wallArtworkByRoom = {
   ]
 };
 
-const roomPositions = {
-  color: new THREE.Vector3(-30, 5, 0),
-  bw: new THREE.Vector3(0, 5, 0),
-  sculpture: new THREE.Vector3(30, 5, 0),
-  death: new THREE.Vector3(40, 4, 0)
-};
+// const roomPositions = {
+//   all: new THREE.Vector3(0, 5, 70),
+//   color: new THREE.Vector3(0, 5, 70),
+//   bw: new THREE.Vector3(40, 5, 70),
+//   sculpture: new THREE.Vector3(80, 5, 70),
+//   death: new THREE.Vector3(120, 5, 70)
+// };
 
 const GalleryScene = () => {
   const mountRef = useRef(null);
@@ -57,7 +59,7 @@ const GalleryScene = () => {
     const scene = new THREE.Scene();
     const currentCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.current = currentCamera;
-    camera.current.position.set(0, 4, 60);
+    camera.current.position.set(0, 4, 20);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -75,52 +77,179 @@ const GalleryScene = () => {
     const woodTexture = loader.load('/assets/icons/wood-floor.png');
     woodTexture.wrapS = THREE.RepeatWrapping;
     woodTexture.wrapT = THREE.RepeatWrapping;
-    woodTexture.repeat.set(12, 12); 
+    woodTexture.repeat.set(12, 12);
+    
+    const artworkWidth = 4;
+    const artworkSpacing = 2;
+    const roomPadding = 0;
+    const minRoomWidth = 40;
 
     const themes = [
-      { name: 'Color', path: 'color', color: '#d0e4f0', position: [-30, 0, 0] },
+      { name: 'Color', path: 'color', color: '#d0e4f0', position: [0, 0, 0] },
       { name: 'Black & White', path: 'bw', color: '#f6f6f6', position: [0, 0, 0] },
-      { name: 'Sculpture', path: 'sculpture', color: '#e8dff4', position: [30, 0, 0] },
-      { name: 'Death', path: 'death', color: '#f2dede', position: [60, 0, 0] }
+      { name: 'Sculpture', path: 'sculpture', color: '#e8dff4', position: [0, 0, 0] },
+      { name: 'Death', path: 'death', color: '#f2dede', position: [0, 0, 0] }
     ];
- 
-  
-        
+
+    let runningX = 0; // Starting position for the first room
+    themes.forEach(theme => {
+      const artworksInRoom = wallArtworkByRoom[theme.path] || [];
+      const numArtworks = artworksInRoom.length;
+      const calculatedWidth = (artworkWidth + artworkSpacing) * numArtworks + roomPadding;
+      const roomWidth = Math.max(calculatedWidth, minRoomWidth);
+
+      theme.roomWidth = roomWidth;
+      theme.position = [runningX, 0, 0];
+
+      runningX += roomWidth;
+    });
+         
         scene.children
         .filter(obj => obj.name === 'dividerWall')
         .forEach(obj => scene.remove(obj));
 
         if (selectedRoom === 'all') {
-        for (let i = 0; i < themes.length - 1; i++) {
-          const x1 = themes[i].position[0];
-          const x2 = themes[i + 1].position[0];
-          const midpointX = (x1 + x2) / 2;
-          const z = themes[i].position[2];
-
-          const dividerWall = new THREE.Mesh(
-            new THREE.PlaneGeometry(1, 10),
+          // First wall (before the first room)
+          const firstTheme = themes[0];
+          const firstWall = new THREE.Mesh(
+            new THREE.PlaneGeometry(70, 10),
             wallMaterial
           );
-          dividerWall.name = 'dividerWall'; 
-          dividerWall.position.set(midpointX, 5, z - 15.01);
-          scene.add(dividerWall);
-        }
+          firstWall.rotation.y = Math.PI / 2;
+          firstWall.position.set(firstTheme.position[0] - firstTheme.roomWidth / 2, 5, -15);
+          scene.add(firstWall);
+
+          // Last wall (after the last room)
+          const lastTheme = themes[themes.length - 1];
+          const lastWall = new THREE.Mesh(
+            new THREE.PlaneGeometry(70, 10),
+            wallMaterial
+          );
+          lastWall.rotation.y = -Math.PI / 2;
+          lastWall.position.set(lastTheme.position[0] + lastTheme.roomWidth / 2, 5, -15);
+          scene.add(lastWall);
+          // for (let i = 0; i < themes.length - 1; i++) {
+          //   const x1 = themes[i].position[0];
+          //   const x2 = themes[i + 1].position[0];
+          //   const midpointX = (x1 + x2) / 2;
+          //   const z = themes[i].position[2];
+
+          //   const dividerWall = new THREE.Mesh(
+          //     new THREE.PlaneGeometry(1, 10),
+          //     wallMaterial
+          //   );
+          //   dividerWall.name = 'dividerWall'; 
+          //   dividerWall.position.set(midpointX, 5, z - 15.01);
+          //   scene.add(dividerWall);
+          // }
+
+          for (let i = 0; i < themes.length - 1; i++) {
+            const theme = themes[i];
+            console.log(themes.length);
+            console.log('looping through index: ', i);
+            console.log('theme', theme);
+            const nextTheme = themes[i + 1];
+            console.log('nextTheme', nextTheme);
+            
+            const dividerX = (theme.position[0] + theme.roomWidth / 2 + nextTheme.position[0] - nextTheme.roomWidth / 2) / 2;
+            console.log('dividerX', dividerX);
+            // const z = theme.position[2];
+            const z = 0; // Adjust this value as needed for the z position
+
+            // roomPositions[theme.path] = new THREE.Vector3(dividerX, 0, 0); // Update the room position for the current theme
+          
+            // const dividerWall = new THREE.Mesh(
+            //   new THREE.PlaneGeometry(50, 10),
+            //   wallMaterial
+            // );
+
+            const rightWall = new THREE.Mesh(
+              new THREE.PlaneGeometry(70, 10), 
+              wallMaterial);
+            rightWall.rotation.y = -Math.PI / 2;
+            rightWall.position.set(dividerX - 0.5, 5, z - 15);
+            console.log('rightWall', rightWall);
+            scene.add(rightWall);
+    
+            const leftWall = new THREE.Mesh(
+              new THREE.PlaneGeometry(70, 10), 
+              wallMaterial);
+            leftWall.rotation.y = Math.PI / 2;
+            leftWall.position.set(dividerX + 0.5, 5, z - 15); 
+            scene.add(leftWall);
+
+            // console.log('dividerWall', dividerWall);
+            // dividerWall.name = 'dividerWall';
+            // dividerWall.rotation.y = Math.PI / 2;
+            // dividerWall.position.set(dividerX, 5, z - 15.01);
+            // scene.add(dividerWall);
+            const spotlight = new THREE.SpotLight(new THREE.Color(0xffffff), 5, 10, Math.PI / 4, 0.3);
+            
+            switch (i) {
+              default: {
+                console.log('default case', theme.position[0], z - 5);
+                break;
+              }
+              case 0: {
+                console.log('case 0', theme.position[0], z - 5);
+                spotlight.position.set(dividerX / 2, 5, z - 5);
+                // spotlight.position.set(x, 13, z - 15);
+                // spotlight.castShadow = true;
+                // spotlight.angle = Math.PI / 4;
+                spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+                scene.add(spotlight);
+                // spotlight.target.position.set(x, 5, z - 5);
+                // scene.add(spotlight.target);
+                break;
+              }
+              case 1: {
+                console.log('case 1', dividerX / 2, z - 5);
+                spotlight.position.set(dividerX / 2, 5, z - 5);
+                // spotlight.position.set(x, 13, z - 15);
+                // spotlight.castShadow = true;
+                // spotlight.angle = Math.PI / 4;
+                spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+                scene.add(spotlight);
+                // spotlight.target.position.set(x, 5, z - 5);
+                // scene.add(spotlight.target);
+                break;
+              }
+              case 2: {
+                console.log('case 2', dividerX / 2, z - 5);
+                spotlight.position.set(dividerX / 2, 5, z - 5);
+                // spotlight.position.set(x, 13, z - 15);
+                // spotlight.castShadow = true;
+                // spotlight.angle = Math.PI / 4;
+                spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+                scene.add(spotlight);
+                // spotlight.target.position.set(x, 5, z - 5);
+                // scene.add(spotlight.target);
+                const spotlight2 = new THREE.SpotLight(new THREE.Color(0xffffff), 5, 10, Math.PI / 4, 0.3);
+                spotlight2.position.set(72, 5, z - 5);
+                spotlight2.add(new THREE.SpotLightHelper(spotlight2)) 
+                scene.add(spotlight2);
+                break;
+              }
+            }
+          }
         }
 
-
-    themes.forEach(({ name, path, color, position }) => {
+    themes.forEach(({ name, path, color, position, roomWidth }) => {
+      console.log(themes);
+      // console.log(path);
+      // console.log(position);
       const [x, z] = position;
-      const roomWidth = (path === 'sculpture' || path === 'death') ? 55 : 28;
+      // const roomWidth = (path === 'sculpture' || path === 'death') ? 55 : 28;
       const wallOffset = roomWidth / 2;
       const showRoom = selectedRoom === 'all' || selectedRoom === path;
       if (!showRoom) return;
       
     
-      const floorWidth = roomWidth + 6; 
+      const floorWidth = roomWidth + 4;
       const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(floorWidth, 36), 
-  new THREE.MeshStandardMaterial({ map: woodTexture })
-);
+        new THREE.PlaneGeometry(floorWidth, 36), 
+        new THREE.MeshStandardMaterial({ map: woodTexture })
+      );
 
       floor.rotation.x = -Math.PI / 2;
       floor.position.set(x, 0, z);
@@ -144,31 +273,42 @@ const GalleryScene = () => {
 
 
       const backWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(roomWidth, 10), 
-      wallMaterial);
+        new THREE.PlaneGeometry(roomWidth + 4, 10), 
+        wallMaterial);
       backWall.position.set(x, 5, z - 15);
       scene.add(backWall);
 
-      const spotlight = new THREE.SpotLight(0xffffff, 5, 50, Math.PI / 4, 0.3);
-      spotlight.position.set(x, 13, z - 15); 
-      spotlight.target.position.set(x, 5, z - 15);
-      scene.add(spotlight);
-      scene.add(spotlight.target);
+      // const spotlight = new THREE.SpotLight(new THREE.Color(0xffffff), 5, 10, Math.PI / 4, 0.3);
+      // spotlight.position.set(x, 5, z - 5);
+      // spotlight.position.set(x, 13, z - 15);
+      // spotlight.castShadow = true;
+      // spotlight.angle = Math.PI / 4;
+      // spotlight.add(new THREE.SpotLightHelper(spotlight)) 
+      // scene.add(spotlight);
+      // spotlight.target.position.set(x, 5, z - 5);
+      // scene.add(spotlight.target);
 
+      if (selectedRoom !== 'all') {
+        const backWall = new THREE.Mesh(
+          new THREE.PlaneGeometry(roomWidth, 10), 
+          wallMaterial);
+        backWall.position.set(x, 5, z - 15);
+        scene.add(backWall);
 
-      const rightWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(30, 10), 
-      wallMaterial);
-      rightWall.rotation.y = -Math.PI / 2;
-      rightWall.position.set(x + wallOffset, 5, z - 15); 
-      scene.add(rightWall);
+        const rightWall = new THREE.Mesh(
+          new THREE.PlaneGeometry(30, 10), 
+          wallMaterial);
+        rightWall.rotation.y = -Math.PI / 2;
+        rightWall.position.set(x + wallOffset, 5, z - 15); 
+        scene.add(rightWall);
 
-      const leftWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(30, 10), 
-      wallMaterial);
-      leftWall.rotation.y = Math.PI / 2;
-      leftWall.position.set(x - wallOffset, 5, z - 15); 
-      scene.add(leftWall);
+        const leftWall = new THREE.Mesh(
+          new THREE.PlaneGeometry(30, 10), 
+          wallMaterial);
+        leftWall.rotation.y = Math.PI / 2;
+        leftWall.position.set(x - wallOffset, 5, z - 15); 
+        scene.add(leftWall);
+      }
 
       const images = wallArtworkByRoom[path];
       const total = images.length;
@@ -223,6 +363,7 @@ const GalleryScene = () => {
         const pointer = new THREE.Vector2();
 
         mount.addEventListener('mousemove', (event) => {
+
           pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
           pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
           raycaster.setFromCamera(pointer, camera.current);
@@ -252,6 +393,7 @@ const GalleryScene = () => {
         mount.addEventListener('click', (event) => {
           pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
           pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+          
           raycaster.setFromCamera(pointer, camera.current);
         
           const intersects = raycaster.intersectObjects(scene.children, true);
@@ -262,11 +404,7 @@ const GalleryScene = () => {
             setZoomedObject(null);
           }          
         });
-        
-        
-        
-        
-
+    
     const controls = new OrbitControls(camera.current, renderer.domElement);
     controls.enableZoom = false;
     controls.enableRotate = false;
@@ -284,8 +422,9 @@ const GalleryScene = () => {
     joystickManager.on('move', (evt, data) => {
       if (data.direction) {
         const angle = data.angle.radian;
-        moveDirection.x = Math.cos(angle) * 0.3;  
-        moveDirection.z = Math.sin(angle) * 0.3;
+        const speed = 0.08; //adjust speed here
+        moveDirection.x = Math.cos(angle) * speed;  
+        moveDirection.z = Math.sin(angle) * speed;
       }
     });
     
@@ -298,9 +437,10 @@ const GalleryScene = () => {
         camera.current.position.z += moveDirection.z;
       } else {
         const { x, y, z } = zoomedObject.position;
-        camera.current.position.lerp(new THREE.Vector3(x, y, z + 8), 0.08);
+        camera.current.position.lerp(new THREE.Vector3(x, y, z + 50), 0.5);
         camera.current.lookAt(zoomedObject.position);
       }
+
       renderer.render(scene, camera.current);
     };
     animate();
@@ -352,7 +492,20 @@ const GalleryScene = () => {
       </div>
 
       {infoBox && (
-        <div style={{ position: 'absolute', top: '20px', right: '20px', backgroundColor: '#222', color: '#fff', padding: '20px', borderRadius: '12px', zIndex: 1001, boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)', 
+          // position: 'absolute', 
+          // top: '20px', 
+          // right: '20px', 
+          backgroundColor: '#222', 
+          color: '#fff', 
+          padding: '20px', 
+          borderRadius: '12px', 
+          zIndex: 1001, 
+          boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
           <h3 style={{ marginBottom: '10px' }}>🖼️ {infoBox.title}</h3>
           <p>👤 <strong>Author:</strong> {infoBox.author}</p>
           <p>📍 <strong>Location:</strong> {infoBox.location}</p>
@@ -389,9 +542,10 @@ setInfoBox(null);
           
 {showInstructions && (
   <div style={{
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     backgroundColor: '#222',
     color: '#fff',
     padding: '20px',
@@ -428,8 +582,41 @@ setInfoBox(null);
   </div>
 )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 2rem', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-  <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} style={{ padding: '0.5rem', fontSize: '1rem' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 2rem', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+    <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} style={{ padding: '0.5rem', fontSize: '1rem' }}>
+    {/* <select 
+      value={selectedRoom} 
+      onChange={(e) => {
+        setSelectedRoom(e.target.value);  // Update the selected room state
+        const room = e.target.value; // Get the selected room value
+        console.log('Selected room:', room); // Log the selected room value
+        switch (room) {
+          case 'all':
+            camera.current.position.set(0, 5, 70);  
+            camera.current.lookAt(new THREE.Vector3(0, 5, 70));
+            break;
+          case 'color':
+            camera.current.position.set(0, 5, 70);  
+            camera.current.lookAt(new THREE.Vector3(0, 5, 70));
+            break;
+          case 'bw':
+            camera.current.position.set(40, 5, 70);  
+            camera.current.lookAt(new THREE.Vector3(40, 5, 70));
+            break;
+          case 'sculpture':
+            camera.current.position.set(80, 5, 70);  
+            camera.current.lookAt(new THREE.Vector3(80, 5, 70));
+            break;
+          case 'death':
+            camera.current.position.set(120, 5, 70);  
+            camera.current.lookAt(new THREE.Vector3(120, 5, 70));
+            break;
+          default:
+            camera.current.position.set(0, 5, 70);  
+            camera.current.lookAt(new THREE.Vector3(0, 5, 70));
+        }
+      }} 
+      style={{ padding: '0.5rem', fontSize: '1rem' }}> */}
     <option value="all">All Rooms</option>
     {Object.keys(artworksByRoom).map(room => (
       <option key={room} value={room}>{room.charAt(0).toUpperCase() + room.slice(1)}</option>
@@ -454,8 +641,33 @@ setInfoBox(null);
 
             <button
             onClick={() => {
-              camera.current.position.set(0, 4, 70);  
-              camera.current.lookAt(new THREE.Vector3(0, 0, 40));  
+              console.log(selectedRoom);
+              const room = selectedRoom;
+              switch (room) {
+                case 'all':
+                  camera.current.position.set(0, 5, 100);  
+                  camera.current.lookAt(new THREE.Vector3(0, 5, 100));
+                  break;
+                case 'color':
+                  camera.current.position.set(0, 5, 70);  
+                  camera.current.lookAt(new THREE.Vector3(0, 5, 70));
+                  break;
+                case 'bw':
+                  camera.current.position.set(40, 5, 70);  
+                  camera.current.lookAt(new THREE.Vector3(40, 5, 70));
+                  break;
+                case 'sculpture':
+                  camera.current.position.set(80, 5, 70);  
+                  camera.current.lookAt(new THREE.Vector3(80, 5, 70));
+                  break;
+                case 'death':
+                  camera.current.position.set(120, 5, 70);  
+                  camera.current.lookAt(new THREE.Vector3(120, 5, 70));
+                  break;
+                default:
+                  camera.current.position.set(0, 5, 70);  
+                  camera.current.lookAt(new THREE.Vector3(0, 5, 70));
+              }  
             }}
             style={{
               backgroundColor: '#4caf50',
@@ -486,18 +698,45 @@ setInfoBox(null);
           </div>
         </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1rem', padding: '0 2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1rem', padding: '0 2rem' }}>
       {Object.keys(artworksByRoom).map((room) => (
         <button
           key={room}
           onClick={() => {
-            setSelectedRoom(room); 
+            console.log('Selected room:', room);
+            // setSelectedRoom(room);
+            // const pos = roomPositions[room];
 
-            const pos = roomPositions[room];
-            if (camera.current && pos) {
-              camera.current.position.copy(pos.clone().add(new THREE.Vector3(0, 4, 30)));
-              camera.current.lookAt(pos);
-            }
+            switch (room) {
+              case 'all':
+                camera.current.position.set(0, 5, 20);  
+                camera.current.lookAt(new THREE.Vector3(0, 0, 10));
+                break;
+              case 'color':
+                camera.current.position.set(0, 5, 30);
+                camera.current.lookAt(new THREE.Vector3(0, 0, 10));
+                break;
+              case 'bw':
+                camera.current.position.set(40, 5, 30);  
+                camera.current.lookAt(new THREE.Vector3(40, 0, 10));
+                break;
+              case 'sculpture':
+                camera.current.position.set(80, 5, 30);  
+                camera.current.lookAt(new THREE.Vector3(80, 0, 10));
+                break;
+              case 'death':
+                camera.current.position.set(120, 5, 30);  
+                camera.current.lookAt(new THREE.Vector3(120, 0, 10));
+                break;
+              default:
+                camera.current.position.set(0, 5, 30);  
+                camera.current.lookAt(new THREE.Vector3(0, 5, 10));
+            }  
+
+            // if (camera.current && pos) {
+            //   camera.current.position.copy(pos.clone().add(new THREE.Vector3(0, 4, 30)));
+            //   camera.current.lookAt(pos);
+            // }
           }}
           title={room}
           style={{
@@ -541,7 +780,7 @@ setInfoBox(null);
             
           : images.map((imgName) => (
               <div key={imgName} style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-                <img src={`assets/${room}/${imgName}`} alt={imgName} style={{ width: '100%', height: 'auto' }} />
+                <img src={`assets/${room}/${imgName}`} alt={imgName} style={{ width: '100%', maxHeight: '200px' }} />
                 <p style={{ padding: '0.5rem', fontSize: '0.9rem' }}>{imgName}</p>
               </div>
             ))}
@@ -558,11 +797,11 @@ const SculptureStack = ({ stack }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
-    <div style={{ position: 'relative', border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+    <div style={{ position: 'relative', border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden',}}>
       <img
         src={`assets/sculpture/${stack[currentIndex]}`}
         alt={stack[currentIndex]}
-        style={{ width: '100%', height: 'auto' }}
+        style={{ width: '100%', maxHeight: '200px',  objectFit: 'cover' }}
       />
       <p style={{ padding: '0.5rem', fontSize: '0.9rem' }}>{stack[currentIndex]}</p>
       {stack.length > 1 && (
@@ -571,7 +810,7 @@ const SculptureStack = ({ stack }) => {
             onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}
             style={{
               position: 'absolute',
-              bottom: '10px',
+              top: '10px',
               left: '10px',
               backgroundColor: currentIndex === 0 ? '#aaa' : '#4caf50',
               color: '#fff',
@@ -587,7 +826,7 @@ const SculptureStack = ({ stack }) => {
             onClick={() => setCurrentIndex(Math.min(currentIndex + 1, stack.length - 1))}
             style={{
               position: 'absolute',
-              bottom: '10px',
+              top: '10px',
               right: '10px',
               backgroundColor: currentIndex === stack.length - 1 ? '#aaa' : '#4caf50',
               color: '#fff',
