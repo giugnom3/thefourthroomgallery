@@ -74,7 +74,7 @@ const GalleryScene = () => {
     const loader = new THREE.TextureLoader();
     const wallMaterial = new THREE.MeshStandardMaterial({ color: '#E6E1D3' });
     const frameMaterial = new THREE.MeshBasicMaterial({ color: '#222' });
-    const woodTexture = loader.load('./assets/icons/wood-floor.png');
+    const woodTexture = loader.load(process.env.PUBLIC_URL + '/assets/icons/wood-floor.png');
     woodTexture.wrapS = THREE.RepeatWrapping;
     woodTexture.wrapT = THREE.RepeatWrapping;
     woodTexture.repeat.set(12, 12);
