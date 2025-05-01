@@ -428,7 +428,7 @@ const GalleryScene = () => {
     joystickManager.on('move', (evt, data) => {
       if (data.direction) {
         const angle = data.angle.radian;
-        const speed = 0.13; 
+        const speed = 0.15; 
         moveDirection.x = Math.cos(angle) * speed;  
         moveDirection.z = Math.sin(angle) * speed;
       }
