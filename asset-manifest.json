@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/thefourthroomgallery/static/css/main.06ccb946.chunk.css",
-    "main.js": "/thefourthroomgallery/static/js/main.459d670b.chunk.js",
-    "main.js.map": "/thefourthroomgallery/static/js/main.459d670b.chunk.js.map",
+    "main.js": "/thefourthroomgallery/static/js/main.25a974c3.chunk.js",
+    "main.js.map": "/thefourthroomgallery/static/js/main.25a974c3.chunk.js.map",
     "runtime~main.js": "/thefourthroomgallery/static/js/runtime~main.feea192a.js",
     "runtime~main.js.map": "/thefourthroomgallery/static/js/runtime~main.feea192a.js.map",
     "static/js/2.1d1eaa3f.chunk.js": "/thefourthroomgallery/static/js/2.1d1eaa3f.chunk.js",
     "static/js/2.1d1eaa3f.chunk.js.map": "/thefourthroomgallery/static/js/2.1d1eaa3f.chunk.js.map",
     "index.html": "/thefourthroomgallery/index.html",
-    "precache-manifest.78f9888f6475f8792802dfd7b9d768d6.js": "/thefourthroomgallery/precache-manifest.78f9888f6475f8792802dfd7b9d768d6.js",
+    "precache-manifest.e784de12e7163d2643f5a9e736f1f11a.js": "/thefourthroomgallery/precache-manifest.e784de12e7163d2643f5a9e736f1f11a.js",
     "service-worker.js": "/thefourthroomgallery/service-worker.js",
     "static/css/main.06ccb946.chunk.css.map": "/thefourthroomgallery/static/css/main.06ccb946.chunk.css.map"
   }
