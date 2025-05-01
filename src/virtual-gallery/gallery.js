@@ -355,6 +355,12 @@ const GalleryScene = () => {
         group.add(mesh);
         group.position.set(posX, 5, posZ);
         scene.add(group);
+
+        const spotlight = new THREE.SpotLight(0xffffff, 1.5, 12, Math.PI / 6, 0.2);
+        spotlight.position.set(posX, 9, posZ); // Above the image
+        spotlight.target = group;
+        scene.add(spotlight);
+        scene.add(spotlight.target);
         
       });
     })
@@ -422,7 +428,7 @@ const GalleryScene = () => {
     joystickManager.on('move', (evt, data) => {
       if (data.direction) {
         const angle = data.angle.radian;
-        const speed = 0.08; //adjust speed here
+        const speed = 0.13; 
         moveDirection.x = Math.cos(angle) * speed;  
         moveDirection.z = Math.sin(angle) * speed;
       }
