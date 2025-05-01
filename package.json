@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "auto": "^11.3.0",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "gh-pages": "^5.0.0"
   }
 }
