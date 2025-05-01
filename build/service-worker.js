@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/thefourthroomgallery/precache-manifest.2e6ce437083766e94a4aedb7714e557c.js"
+  "/thefourthroomgallery/precache-manifest.dba3318b539bbc856335aaa8852f70c4.js"
 );
 
 self.addEventListener('message', (event) => {
