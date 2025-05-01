@@ -60,9 +60,8 @@ const GalleryScene = () => {
     const currentCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.current = currentCamera;
     //camera.current.position.set(0, 4, 20);
-    camera.current.position.set(160, 5, 140); 
-    camera.current.lookAt(new THREE.Vector3(60, 5, 0)); 
-    camera.current.up.set(0,1,0);
+    camera.current.position.set(0, 5, 100);  
+    camera.current.lookAt(new THREE.Vector3(0, 5, 100));
 
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
