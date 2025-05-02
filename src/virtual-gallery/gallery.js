@@ -7,29 +7,70 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
 
 const artworksByRoom = {
-  color: ['color1.jpeg', 'color2.jpeg', 'color3.png', 'color4.jpeg', 'color5.jpeg'],
-  bw: ['bw1_A.jpeg', 'bw1_B.jpeg', 'bw2.png'],
-  death: ['death1.jpeg', 'death2.png', 'death3.jpeg', 'death4.jpeg', 'death5.jpeg', 'death6.jpeg', 'death7.jpeg'],
+  color: ['FruitSpread.jpeg', 'SculptureSkull.jpeg', 'FruitFlowerSculpture.jpeg', 'ColoredMannequin.jpeg', 'StairwayToTime.jpeg'],
+  bw: ['Happiness.jpeg ', 'HappinessDescription.jpeg', 'Faces.png'],
+  death: ['GrinningSkull.jpeg', 'EnclosedSkull.jpeg', 'TableSkull.jpeg', 'SkullKnee.jpeg', 'SkullCloseUp.jpeg', 'SkullArm.jpeg', 'FlowerSkull.jpeg'],
   sculpture: [
-    'sculpture1_A.png', 'sculpture1_B.png', 'sculpture1_C.png',
-    'sculpture2_A.jpeg', 'sculpture2_B.jpeg',
-    'sculpture3_A.jpeg', 'sculpture3_B.jpeg',
-    'sculpture4_A.jpeg', 'sculpture4_B.jpeg',
-    'sculpture5_A.png', 'sculpture5_B.png',
-    'sculpture6_A.jpeg', 'sculpture6_B.jpeg',
-    'sculpture7_A.jpeg', 'sculpture7_B.jpeg'
+    'LeafFace_A.png', 'LeafFace_B.png', 'LeafFace_C.png',
+    'TreadmillBrain_A.jpeg', 'TreadmillBrain_B.jpeg',
+    'BilliardsPlay_A.jpeg', 'BilliardsPlay_B.jpeg',
+    'CocaColaOctopus_A.jpeg', 'CocaColaOctopus_B.jpeg',
+    'PCDesktop_A.png', 'PCDesktop_B.png',
+    'TeapotTransformer_A.jpeg', 'TeapotTransformer_B.jpeg',
+    'BadMail_A.jpeg', 'BadMail_B.jpeg'
   ]
 };
 
+// Add artwork descriptions - maps filename to description
+const artworkDescriptions = {
+  // Color Room
+  'FruitSpread.jpeg': " 'FruitSpread' brings together bold shapes and bright colors in a playful, graphic way. A banana, bottles, apples, and a single yellow flower sit against a dramatic striped background, giving the classic still life a fresh, modern feel. The sharp contrasts and strong shadows add energy to everyday objects, making them feel lively and full of personality. ",
+  'SculptureSkull.jpeg': " 'SculptureSkull' combines classic still life elements with a quiet, moody atmosphere. A skull, a stone figure, fruit, flowers, and draped fabric all come together to explore themes of life, beauty, and time. The muted colors and strong shapes give the piece a sense of calm and reflection, blending natural and human-made forms into one thoughtful scene.",
+  'FruitFlowerSculpture.jpeg': " 'FruitFlowerSculpture' is a dramatic still life with a white statue at center, surrounded by red grapes in glass, a dark vase, golden oil lamp, and white flower - all against a bold crimson background. Classical meets modern in vibrant color contrasts. ",
+  'ColoredMannequin.jpeg':  " 'ColoredMannequin' is a pen and ink still life with striking blue background. Various objects including spheres, cylinders and abstract forms are arranged in careful composition. Crosshatched technique creates texture and dimension through precise linework in blue, black and touches of red. ",
+  'StairwayToTime.jpeg': " 'StairwayToTime' is a surreal drawing with broken clock face, spiral staircase and sailing ship. Pencil work detailed with pops of purple, green and blue. Time fractures into mechanical and natural elements in dreamlike composition. ",
+  
+  // Black & White Room
+  'Happiness.jpeg ': "This series of six images is a visual representation of the things and people that bring me happiness. When I'm feeling upset, anxious, or down, I imagine a portal that opens up to the people, places, and moments that bring me peace and joy. Creating this work helped me reconnect with those feelings and reminded me of how powerful it is to hold onto the good in our lives. Each image represents a different piece of my world that lifts me up. Whether it's a memory, a favorite activity, a special place, or someone I love. Together, they form a portal into my personal world of comfort. These images are more than just a collection of happy things that make up who I am. Even when things feel heavy. I can look through this portal and feel a sense of calm and connection to the people and things I love. Through this work, I hope others are inspired to think about their own places of happiness, and maybe even imagine their own portals.",
+  'HappinessDescription.jpeg': "This series of six images is a visual representation of the things and people that bring me happiness. When I'm feeling upset, anxious, or down, I imagine a portal that opens up to the people, places, and moments that bring me peace and joy. Creating this work helped me reconnect with those feelings and reminded me of how powerful it is to hold onto the good in our lives. Each image represents a different piece of my world that lifts me up. Whether it's a memory, a favorite activity, a special place, or someone I love. Together, they form a portal into my personal world of comfort. These images are more than just a collection of happy things that make up who I am. Even when things feel heavy. I can look through this portal and feel a sense of calm and connection to the people and things I love. Through this work, I hope others are inspired to think about their own places of happiness, and maybe even imagine their own portals.",
+  'Faces.png': " 'Faces' is a collection of black-and-white photos showing abandoned places and crumbling structures. Some look almost like faces, giving the scenes a quiet, human feeling. The prints are pinned straight onto the canvas, making the whole piece feel raw and temporary — like memories that are starting to fade. It's about noticing beauty and emotion in places that are often overlooked.",
+  
+  // Death Room
+  'GrinningSkull.jpeg': " 'GrinningSkull' is a detailed pencil drawing of skeleton torso with skull grinning at viewer against beige background. Green leaf emerges from mouth, creating contrast with bone-white anatomy. Meticulously rendered ribcage shows careful attention to anatomical structure, with shadows enhancing dimensional effect. Small dark vessel visible in bottom corner completes the memento mori composition. ",
+  'EnclosedSkull.jpeg': " 'EnclosedSkull' is a fragmented skeleton study on gray paper, pinned to textured white background. Three separate anatomical drawings - skull with detailed teeth, ribcage with spine, and pelvis with arm bone - create segmented but cohesive anatomical composition. Graphite technique captures bone structure with scientific precision and artistic sensitivity. ",
+  'TableSkull.jpeg': " 'TableSkull' is a split-panel drawing of skeletons with hooks in their skulls against purple-blue backdrops. Left skeleton sits with art supplies while right shows close-up skull profile. Graphite work on tan paper with vertical divider creates eerie, contemplative mood. Modern vanitas featuring technological elements alongside traditional memento mori imagery. ",
+  'SkullKnee.jpeg': " 'SkullKnee' is a contemplative skeleton drawing on gray paper with overlapping sheets. Seated figure adorned with soft pink flowers contrasts with anatomical precision. Handwritten text questions release and freedom. Leg bone extends separately on left panel. Technical skill meets emotional depth in this memento mori with touches of color.",
+  'SkullCloseUp.jpeg': " 'SkullCloseUp' is a detailed ribcage drawing against rich golden background. Graphite skeleton with meticulously rendered bones shows thoracic anatomy alongside what appears to be a sink with bubbles. The contrast between metallic yellow backdrop and grayscale anatomical structure creates striking visual tension in this contemporary vanitas.",
+  'SkullArm.jpeg': "In 'SkullArm', a vase of flowers sits next to a large, detailed leg bone and foot skeleton, all set against a textured pink and brown background. The mix of delicate flowers and stark bones gives the piece a unique blend of life and death.",
+  'FlowerSkull.jpeg': "In 'FlowerSkull', a skeleton with green vines and flowers growing around it is split across four triangle-shaped pieces. The mix of bones, plants, and soft colors gives the artwork a playful but slightly eerie vibe, blending life and death in a creative way."
+,
+  
+  // Sculpture Room
+  'LeafFace_A.png': "In 'LeafFace', a sculpture features a textured, metallic frame that looks like a cluster of layered leaves or petals, wrapping around a central form. The natural shapes and earthy colors give it an organic, almost fossil-like feel, making it stand out as both mysterious and grounded.",
+  'LeafFace_B.png': "In 'LeafFace', a sculpture features a textured, metallic frame that looks like a cluster of layered leaves or petals, wrapping around a central form. The natural shapes and earthy colors give it an organic, almost fossil-like feel, making it stand out as both mysterious and grounded.",
+  'LeafFace_C.png': "In 'LeafFace', a sculpture features a textured, metallic frame that looks like a cluster of layered leaves or petals, wrapping around a central form. The natural shapes and earthy colors give it an organic, almost fossil-like feel, making it stand out as both mysterious and grounded.",
+  'TreadmillBrain_A.jpeg': "In 'TreadmillBrain', a playful sculpture shows a pink brain with sneakers walking on a treadmill. It’s a fun and quirky take on the idea of keeping your mind active, mixing humor with a bit of everyday life.",
+  'TreadmillBrain_B.jpeg': "In 'TreadmillBrain', a playful sculpture shows a pink brain with sneakers walking on a treadmill. It’s a fun and quirky take on the idea of keeping your mind active, mixing humor with a bit of everyday life.",
+  'BilliardsPlay_A.jpeg': "In 'BilliardsPlay', a colorful sculpture shows a pool table with pool balls organized in the middle. There are two pool cues laying on the table. It is a creative showing of many colors.",
+  'BilliardsPlay_B.jpeg': "In 'BilliardsPlay', a colorful sculpture shows a pool table with pool balls organized in the middle. There are two pool cues laying on the table. It is a creative showing of many colors.",
+  'CocaColaOctopus_A.jpeg': "In 'CocaColaOctopus', a blue Octopus holds several cans of soda. The Octopus is holding cans of CocaCola, Sprite, and Fanta. This piece is well sculpted and successfully shows a range of colors.",
+  'CocaColaOctopus_B.jpeg': "In 'CocaColaOctopus', a blue Octopus holds several cans of soda. The Octopus is holding cans of CocaCola, Sprite, and Fanta. This piece is well sculpted and successfully shows a range of colors.",
+  'PCDesktop_A.png': " 'PCDesktop' displays a sculpture of a PC, which appears to be from the 90s or 2000s. The electronics appear pink, while the screen is blue. The color contrast makes this piece pop.",
+  'PCDesktop_B.png': " 'PCDesktop' displays a sculpture of a PC, which appears to be from the 90s or 2000s. The electronics appear pink, while the screen is blue. The color contrast makes this piece pop.",
+  'TeapotTransformer_A.jpeg': " 'TeapotTransformer' shows a small white teapot pouring out a blue substance that is transforming into solid. The teapot itself is much smaller than the substance that is being poured out.",
+  'TeapotTransformer_B.jpeg': " 'TeapotTransformer' shows a small white teapot pouring out a blue substance that is transforming into solid. The teapot itself is much smaller than the substance that is being poured out.",
+  'BadMail_A.jpeg': " 'Badmail' shows a bloodied backpack containing bloodied envelopes. The backpack has holes inside it.",
+  'BadMail_B.jpeg': " 'Badmail' shows a bloodied backpack containing bloodied envelopes. The backpack has holes inside it."
+};
+
 const wallArtworkByRoom = {
-  // entrance: ['exhibit1.png', 'exhibit2.png'],
-  color: ['color1.jpeg', 'color2.jpeg', 'color3.png', 'color4.jpeg', 'color5.jpeg'],
-  bw: ['bw1_A.jpeg', 'bw1_B.jpeg', 'bw2.png'],
-  death: ['death1.jpeg', 'death2.png', 'death3.jpeg', 'death4.jpeg', 'death5.jpeg', 'death6.jpeg', 'death7.jpeg'],
+  color: ['FruitSpread.jpeg', 'SculptureSkull.jpeg', 'FruitFlowerSculpture.jpeg', 'ColoredMannequin.jpeg', 'StairwayToTime.jpeg'],
+  bw: ['Happiness.jpeg ', 'HappinessDescription.jpeg', 'Faces.png'],
+  death: ['GrinningSkull.jpeg', 'EnclosedSkull.jpeg', 'TableSkull.jpeg', 'SkullKnee.jpeg', 'SkullCloseUp.jpeg', 'SkullArm.jpeg', 'FlowerSkull.jpeg'],
   sculpture: [
-    'sculpture1_B.png','sculpture2_B.jpeg',
-    'sculpture3_A.jpeg','sculpture4_A.jpeg', 'sculpture5_A.png', 
-    'sculpture6_A.jpeg', 'sculpture7_B.jpeg'
+    'LeafFace_B.png','TreadmillBrain_B.jpeg',
+    'BilliardsPlay_A.jpeg','CocaColaOctopus_A.jpeg', 'PCDesktop_A.png',
+    'TeapotTransformer_A.jpeg', 'BadMail_B.jpeg'
   ]
 };
 
@@ -350,6 +391,7 @@ const GalleryScene = () => {
           author: 'Unknown',
           location: 'SCSU Art Gallery',
           year: '2025',
+          description: artworkDescriptions[img] || 'No description available.',
           isArtwork: true    
         };
        
@@ -519,6 +561,8 @@ const GalleryScene = () => {
           <p>👤 <strong>Author:</strong> {infoBox.author}</p>
           <p>📍 <strong>Location:</strong> {infoBox.location}</p>
           <p>📅 <strong>Year:</strong> {infoBox.year}</p>
+          <p>📝 <strong>Description:</strong> </p>
+          <p> {infoBox.description}</p>
           <button
   onClick={() => {
     if (zoomedObject) {
